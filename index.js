@@ -10,16 +10,8 @@ for (let i = 0; i < slides.length; i++) {
     slides[i].childNodes[0].textContent = colors[i];
 }
 
-const cycleImage = {
-    left: () => {
-        stepper.left(slider);
-    },
-    right: () => {
-        stepper.right(slider);
-    }
-}
 arrows.forEach(arrow => {
-    arrow.addEventListener('click', cycleImage[arrow.classList[1]]);
+    arrow.addEventListener('click', arrow.classList[1] === 'left' ? () => stepper.left(slider) : () => stepper.right(slider))
 });
 
 function getOneStep() {
