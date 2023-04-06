@@ -1,8 +1,10 @@
 const slides = document.getElementsByClassName('slide');
 const arrows = document.querySelectorAll('.arrow');
 const slider = document.querySelector('#slider');
+const dots = document.querySelectorAll('.dots div')
+const stepper = makeStepper(5, slider);
 
-const stepper = makeStepper(5);
+setInterval(stepper.right, 5000);
 
 const colors = ['green', 'red', 'blue', 'yellow', 'brown'];
 for (let i = 0; i < slides.length; i++) {
@@ -11,33 +13,54 @@ for (let i = 0; i < slides.length; i++) {
 }
 
 arrows.forEach(arrow => {
-    arrow.addEventListener('click', arrow.classList[1] === 'left' ? () => stepper.left(slider) : () => stepper.right(slider))
+    arrow.addEventListener('click', arrow.classList[1] === 'left' ? stepper.left : stepper.right)
 });
+
+for (let i = 0; i < dots.length; i++) {
+    dots[i].addEventListener('click', function () {
+        stepper.goTo(-i);
+        stepper.setPosition(-i);
+        setSelected(i);
+    });
+}
 
 function getOneStep() {
     let position = parseInt(getComputedStyle(document.documentElement)
         .getPropertyValue('--slide-width')
         .split('px')[0]);
-    let gap = parseInt(getComputedStyle(document.documentElement)
-        .getPropertyValue('--slide-gap')
-        .split('px')[0]);
-    return position + gap
+    return position
 }
 
-function makeStepper(numberOfSlides) {
-    let counter = 0;
+function setSelected(selected) {
+    dots.forEach(i => i.classList.remove('selected'));
+    dots[selected].classList.add('selected');
+    
+}
+
+function makeStepper(numberOfSlides, element) {
+    let position = 0;
     const oneStep = getOneStep();
-    const makeOneStep = (element) => element.style.transform = 'translateX(' + oneStep * counter + 'px)';
+    const goTo = (position) => {
+        element.style.transform = 'translateX(' + position * oneStep + 'px)';
+        dots[position]
+    };
+    const left = () => {
+        position++;
+        if (position > 0) position = -(numberOfSlides - 1);
+        goTo(position);
+        setSelected(-position);
+    }
+    const right = () => {
+        position--;
+        if (position < -4) position = 0;
+        goTo(position);
+        setSelected(-position);
+    }
+    const setPosition = (i) => position = i;
     return {
-        left: (element) => {
-            counter++;
-            if (counter > 0) counter = -(numberOfSlides - 1);
-            makeOneStep(element);
-        },
-        right: (element) => {
-            counter--;
-            if (counter < -4) counter = 0;
-            makeOneStep(element);
-        },
+        left,
+        right,
+        setPosition,
+        goTo,
     }
 }

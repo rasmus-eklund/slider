@@ -1,12 +1,12 @@
 :root {
-    --slide-width: 600px;
-    --slide-gap: 20px;
+    --slide-width: 700px;
     --picture-frame-height: 400px;
 }
 
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 p {
@@ -21,24 +21,54 @@ p {
 }
 
 #picture-frame {
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    position: relative;
     margin: 20px;
     border: 1px solid black;
-    width: calc(var(--slide-width) + var(--slide-gap)*2);
+    width: var(--slide-width);
     height: var(--picture-frame-height);
 }
 
 #slider {
+    align-self: flex-start;
     display: flex;
     justify-content: space-evenly;
     background-color: rgb(147, 216, 216);
-    width: calc(var(--slide-width) * 5 + calc(var(--slide-gap) * 6));
+    width: calc(var(--slide-width) * 5);
     height: var(--picture-frame-height);
     position: relative;
     right: 0px;
     transition: transform 600ms ease-in-out;
 }
 
+.dots {
+    align-self: center;
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 0px;
+    padding: 20px;
+}
+
+.dots div {
+    height: 20px;
+    width: 20px;
+    background-color: white;
+    opacity: 0.4;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+.dots div:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.dots .selected {
+    background-color: black;
+}
 .slide {
     display: flex;
     justify-content: center;
